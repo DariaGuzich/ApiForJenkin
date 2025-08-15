@@ -7,7 +7,7 @@ RUN apt-get update && \
     apt-get install -y maven docker.io && \
     apt-get clean
 
-# Разрешаем Jenkins работать с Docker
-RUN usermod -aG docker jenkins
+# Добавляем jenkins в группу docker
+RUN groupadd -for docker && usermod -aG docker jenkins
 
 USER jenkins
