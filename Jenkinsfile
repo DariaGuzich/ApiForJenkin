@@ -7,7 +7,7 @@ pipeline {
     tools {
         // Используем ранее настроенные JDK и Maven
         jdk 'JDK_21'
-        maven 'Maven_3.9'
+        maven 'Maven_3.8.7'
     }
 
     // Определяем этапы пайплайна
