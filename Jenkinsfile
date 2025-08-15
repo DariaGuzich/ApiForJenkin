@@ -1,9 +1,9 @@
 pipeline {
     agent {
-        // Мы говорим Jenkins использовать Docker-образ.
-        // Этот образ уже содержит все необходимые инструменты: Maven и JDK 21.
         docker {
             image 'maven:3.9-eclipse-temurin-21'
+            // Указываем Jenkins, что нужно использовать настроенный инструмент Docker
+            tool 'docker-client'
         }
     }
 
@@ -11,8 +11,7 @@ pipeline {
         stage('Build and Run Tests') {
             steps {
                 script {
-                    // Копируем ваш код в рабочий каталог внутри контейнера.
-                    // Теперь мы можем запустить тесты.
+                    // Команда 'mvn test' будет выполнена внутри Docker-контейнера
                     sh 'mvn test'
                 }
             }
