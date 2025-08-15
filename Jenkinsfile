@@ -13,8 +13,7 @@ pipeline {
     }
     post {
         always {
-            // Собираем результаты тестов
-            junit 'target/surefire-reports/*.xml'
+            junit '**/target/surefire-reports/*.xml'
         }
     }
 }
