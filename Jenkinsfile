@@ -15,7 +15,10 @@ pipeline {
                 }
                 stage('Prepare Target') {
                     steps {
-                        sh 'mkdir -p target/surefire-reports'
+                        sh '''
+                        mkdir -p target/surefire-reports
+                        chmod 777 target/surefire-reports
+                        '''
                     }
                 }
             }
