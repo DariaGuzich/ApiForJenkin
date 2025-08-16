@@ -9,15 +9,15 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh '''
-                  mkdir -p reports
-                  docker run --rm -v $(pwd)/reports:/app/target/surefire-reports my-api-tests:latest
+                  mkdir -p target
+                  docker run --rm -v $(pwd)/target:/app/target my-api-tests:latest
                 '''
             }
         }
     }
     post {
         always {
-            junit 'reports/*.xml'
+            junit 'target/surefire-reports/*.xml'
         }
     }
 }
