@@ -8,8 +8,16 @@ pipeline {
         }
         stage('Run Tests') {
             steps {
-                sh 'docker run --rm my-api-tests:latest'
+                sh '''
+                  mkdir -p reports
+                  docker run --rm -v $(pwd)/reports:/app/target/surefire-reports my-api-tests:latest
+                '''
             }
+        }
+    }
+    post {
+        always {
+            junit 'reports/*.xml'
         }
     }
 }
