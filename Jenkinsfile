@@ -1,46 +1,48 @@
 pipeline {
     agent any
-    stages {
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t my-api-tests:latest .'
-            }
-        }
-        stage('Run Tests') {
-            steps {
-                sh '''
-                  # Create target directory
-                  mkdir -p target
 
-                  # Run tests in a named container
-                  docker run --name test-run-container my-api-tests:latest
-
-                  # Copy test results from container to host
-                  docker cp test-run-container:/app/target/surefire-reports ./target/surefire-reports
-
-                  # Show what we got
-                  echo "=== Copied files ==="
-                  ls -la target/surefire-reports/ || echo "No surefire-reports directory"
-
-                  # Clean up container
-                  docker rm test-run-container
-                '''
-            }
-        }
+    environment {
+        IMAGE_NAME = 'my-api-tests:latest'
     }
-    post {
-        always {
-            script {
-                if (fileExists('target/surefire-reports')) {
-                    junit 'target/surefire-reports/*.xml'
-                } else {
-                    echo "No test reports found"
+
+    stages {
+        stage('Build & Test') {
+            parallel {
+                stage('Build Docker Image') {
+                    steps {
+                        sh 'docker build -t ${IMAGE_NAME} .'
+                    }
+                }
+                stage('Prepare Target') {
+                    steps {
+                        sh 'mkdir -p target/surefire-reports'
+                    }
                 }
             }
         }
-        cleanup {
-            // Ensure container cleanup
-            sh 'docker rm test-run-container || true'
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    // Use volume mount with proper user mapping
+                    sh '''
+                        docker run --rm \
+                            -v "${WORKSPACE}/target:/app/target" \
+                            -u $(id -u):$(id -g) \
+                            ${IMAGE_NAME}
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            junit(
+                testResults: 'target/surefire-reports/*.xml',
+                allowEmptyResults: true,
+                skipPublishingChecks: false
+            )
         }
     }
 }
