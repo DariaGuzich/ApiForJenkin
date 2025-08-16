@@ -10,13 +10,13 @@ pipeline {
             steps {
                 sh '''
                   # Create target directory
-                  mkdir -p target
+                  mkdir -p target/surefire-reports
 
                   # Run tests in a named container
                   docker run --name test-run-container my-api-tests:latest
 
-                  # Copy test results from container to host
-                  docker cp test-run-container:/app/target/surefire-reports ./target/surefire-reports
+                  # Copy test results from container to host (copy contents, not directory)
+                  docker cp test-run-container:/app/target/surefire-reports/. ./target/surefire-reports/
 
                   # Show what we got
                   echo "=== Copied files ==="
