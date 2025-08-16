@@ -1,19 +1,16 @@
 pipeline {
-    agent any
-    tools {
-        jdk 'JDK_21'
-        maven 'Maven_3.8.7'
-    }
-    stages {
-        stage('Run API Tests') {
-            steps {
-                sh 'mvn clean test'
-            }
+    agent {
+        docker {
+            image 'maven:3.9-eclipse-temurin-21'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
-    post {
-        always {
-            junit '**/target/surefire-reports/*.xml'
+    stages {
+        stage('Build and Test') {
+            steps {
+                sh 'mvn clean install'
+                sh 'mvn test'
+            }
         }
     }
 }
