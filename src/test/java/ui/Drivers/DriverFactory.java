@@ -44,15 +44,6 @@ public class DriverFactory {
                     // Уникальная директория пользователя для каждого экземпляра
                     options.addArguments("--user-data-dir=/tmp/chrome-user-data-" + UUID.randomUUID().toString());
 
-                    // Дополнительные стабилизирующие аргументы
-//                    options.addArguments("--disable-extensions");
-//                    options.addArguments("--disable-plugins");
-//                    options.addArguments("--disable-images");
-//                    options.addArguments("--disable-javascript");
-//                    options.addArguments("--disable-background-timer-throttling");
-//                    options.addArguments("--disable-backgrounding-occluded-windows");
-//                    options.addArguments("--disable-renderer-backgrounding");
-
                     webDriver = new ChromeDriver(options);
             }
             webDriver.manage().window().maximize();
