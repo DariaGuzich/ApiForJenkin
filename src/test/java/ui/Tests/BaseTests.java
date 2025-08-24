@@ -16,9 +16,4 @@ public class BaseTests {
     public void initialize() {
         webDriver = DriverFactory.getDriver(DriverTypes.Chrome);
     }
-
-    @AfterEach
-    public void quit() {
-        DriverFactory.quitDriver();
-    }
 }

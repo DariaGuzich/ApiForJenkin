@@ -19,10 +19,16 @@ public class TestResultExtension implements TestWatcher {
 
     @Override
     public void testFailed(ExtensionContext context, Throwable cause) {
-        WebDriver driver = DriverFactory.getDriver(DriverTypes.Chrome); // вернёт текущий инстанс
+        WebDriver driver = DriverFactory.getDriver(DriverTypes.Chrome);
         if (driver != null) {
             takeScreenshot(driver, context.getDisplayName());
         }
+        DriverFactory.quitDriver(); // Закрываем драйвер после скриншота
+    }
+
+    @Override
+    public void testSuccessful(ExtensionContext context) {
+        DriverFactory.quitDriver(); // Закрываем драйвер после успешного теста
     }
 
     private void takeScreenshot(WebDriver driver, String testName) {
@@ -43,10 +49,5 @@ public class TestResultExtension implements TestWatcher {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void testSuccessful(ExtensionContext context) {
-        // можно добавить логирование успеха
     }
 }
