@@ -33,7 +33,7 @@ public class DriverFactory {
                     ChromeOptions options = new ChromeOptions();
 
                     // Основные аргументы для Docker/headless режима
-                    options.addArguments("--headless");
+//                    options.addArguments("--headless");
                     options.addArguments("--no-sandbox");
                     options.addArguments("--disable-dev-shm-usage");
                     options.addArguments("--disable-gpu");
@@ -45,13 +45,13 @@ public class DriverFactory {
                     options.addArguments("--user-data-dir=/tmp/chrome-user-data-" + UUID.randomUUID().toString());
 
                     // Дополнительные стабилизирующие аргументы
-                    options.addArguments("--disable-extensions");
-                    options.addArguments("--disable-plugins");
-                    options.addArguments("--disable-images");
-                    options.addArguments("--disable-javascript");
-                    options.addArguments("--disable-background-timer-throttling");
-                    options.addArguments("--disable-backgrounding-occluded-windows");
-                    options.addArguments("--disable-renderer-backgrounding");
+//                    options.addArguments("--disable-extensions");
+//                    options.addArguments("--disable-plugins");
+//                    options.addArguments("--disable-images");
+//                    options.addArguments("--disable-javascript");
+//                    options.addArguments("--disable-background-timer-throttling");
+//                    options.addArguments("--disable-backgrounding-occluded-windows");
+//                    options.addArguments("--disable-renderer-backgrounding");
 
                     webDriver = new ChromeDriver(options);
             }
