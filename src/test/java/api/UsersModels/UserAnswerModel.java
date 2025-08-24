@@ -1,4 +1,4 @@
-package UsersModels;
+package api.UsersModels;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;

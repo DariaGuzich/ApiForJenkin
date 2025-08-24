@@ -1,5 +1,7 @@
-import UsersModels.UserAnswerModel;
-import UsersModels.UserCreationModel;
+package api;
+
+import api.UsersModels.UserAnswerModel;
+import api.UsersModels.UserCreationModel;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
