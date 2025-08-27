@@ -23,15 +23,15 @@ public class DriverFactory {
             synchronized (lock) {
                 if (webDriver == null) { // Повторная проверка внутри блокировки
                     switch (driver) {
-                        case DriverTypes.Firefox:
+                        case Firefox:
                             WebDriverManager.firefoxdriver().setup();
                             webDriver = new FirefoxDriver();
                             break;
-                        case DriverTypes.Edge:
+                        case Edge:
                             WebDriverManager.edgedriver().setup();
                             webDriver = new EdgeDriver();
                             break;
-                        case DriverTypes.Chrome:
+                        case Chrome:
                         default:
                             WebDriverManager.chromedriver().setup();
                             ChromeOptions options = new ChromeOptions();
