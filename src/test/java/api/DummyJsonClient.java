@@ -2,20 +2,20 @@ package api;
 
 import api.UsersModels.UserAnswerModel;
 import api.UsersModels.UserCreationModel;
+import api.UsersModels.DeleteUserModel;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Assertions;
 
-public class ReqresClient {
+public class DummyJsonClient {
 
-    private static final String BASE_URL = "https://reqres.in";
-    private static final String USERS_ENDPOINT = "/api/users";
+    private static final String BASE_URL = "https://dummyjson.com";
+    private static final String USERS_ENDPOINT = "/users";
 
     protected RequestSpecification getRequestSpec() {
         return RestAssured.given()
                 .baseUri(BASE_URL)
-                .header("x-api-key", "reqres-free-v1")
                 .header("Content-Type", "application/json");
     }
 
@@ -32,7 +32,7 @@ public class ReqresClient {
     }
 
     public UserAnswerModel getUserById(int userId) {
-        UserAnswerModel userAnswerModel = getUserByIdResponse(userId).jsonPath().getObject("data", UserAnswerModel.class);
+        UserAnswerModel userAnswerModel = getUserByIdResponse(userId).jsonPath().getObject("", UserAnswerModel.class);
         Assertions.assertNotNull(userAnswerModel, "User should not be null");
         return userAnswerModel;
     }
@@ -52,7 +52,7 @@ public class ReqresClient {
         Response response = getRequestSpec()
                 .when()
                 .body(userCreationModel)
-                .post(USERS_ENDPOINT)
+                .post(USERS_ENDPOINT + "/add")
                 .then()
                 .extract()
                 .response();
@@ -69,5 +69,14 @@ public class ReqresClient {
                 .response();
 
         return response;
+    }
+
+    public DeleteUserModel deleteUserAndGetModel(String userId) {
+        Response response = deleteUser(userId);
+        Assertions.assertEquals(200, response.getStatusCode(), "Delete request should return 200 status");
+        
+        DeleteUserModel deleteUserModel = response.jsonPath().getObject("", DeleteUserModel.class);
+        Assertions.assertNotNull(deleteUserModel, "Delete response should not be null");
+        return deleteUserModel;
     }
 }

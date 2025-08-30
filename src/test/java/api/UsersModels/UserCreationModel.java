@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UserCreationModel {
-    private String name;
-    private String job;
+    private String firstName;
+    private String lastName;
+    private int age;
 }
