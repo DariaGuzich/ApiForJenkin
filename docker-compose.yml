@@ -21,6 +21,7 @@ services:
     environment:
       - JENKINS_SECRET=jenkins_secret_for_api_agent
       - AGENT_NAME=api-agent
+      - MAVEN_OPTS=-Dtest.db.environment=jenkins
     command: ["/home/jenkins/start-agent.sh"]
     volumes:
       - api_workspace:/home/jenkins/agent

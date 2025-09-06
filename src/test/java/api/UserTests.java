@@ -23,8 +23,9 @@ public class UserTests {
     public static void setupClient() {
         dummyJsonClient = new DummyJsonClient();
         
-        // Initialize database utility for Docker environment
-        String environment = System.getProperty("test.db.environment", "docker");
+        // Initialize database utility - default to jenkins if JENKINS_URL is set, otherwise docker
+        String environment = System.getProperty("test.db.environment", 
+            System.getenv("JENKINS_URL") != null ? "jenkins" : "docker");
         dbUtil = new DatabaseUtil(environment);
         System.out.println("Database tests initialized for environment: " + environment);
     }
