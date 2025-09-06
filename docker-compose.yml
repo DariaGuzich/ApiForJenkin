@@ -1,0 +1,55 @@
+services:
+  jenkins-master:
+    build:
+      context: ../ApiForJenkin
+      dockerfile: jenkins-master.dockerfile
+    container_name: jenkins-master
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  api-agent:
+    build:
+      context: ../ApiForJenkin
+      dockerfile: api-agent.dockerfile
+    container_name: jenkins-api-agent
+    network_mode: "container:jenkins-master"
+    environment:
+      - JENKINS_SECRET=b2738d2f1767f5f716e39dbd050eb2d019ad88419317c47271daf0f993da506a
+      - AGENT_NAME=api-agent
+    command: ["/home/jenkins/start-agent.sh"]
+    volumes:
+      - api_workspace:/home/jenkins/agent
+      - ./start-agent.sh:/home/jenkins/start-agent.sh:ro
+    depends_on:
+      - jenkins-master
+    restart: unless-stopped
+
+  ui-agent:
+    build:
+      context: ../ApiForJenkin
+      dockerfile: ui-agent.dockerfile
+    container_name: jenkins-ui-agent
+    network_mode: "container:jenkins-master"
+    environment:
+      - JENKINS_SECRET=26aaed2c098a501e767960a903ffc72289e2a99093155d22be50368026048c36
+      - AGENT_NAME=ui-agent
+    command: ["/home/jenkins/start-agent.sh"]
+    volumes:
+      - ui_workspace:/home/jenkins/agent
+      - /dev/shm:/dev/shm
+      - ./start-agent.sh:/home/jenkins/start-agent.sh:ro
+    shm_size: 2g
+    depends_on:
+      - jenkins-master
+    restart: unless-stopped
+
+volumes:
+  jenkins_home:
+    external: true
+  api_workspace:
+  ui_workspace:
