@@ -19,7 +19,7 @@ services:
     container_name: jenkins-api-agent
     network_mode: "container:jenkins-master"
     environment:
-      - JENKINS_SECRET=b2738d2f1767f5f716e39dbd050eb2d019ad88419317c47271daf0f993da506a
+      - JENKINS_SECRET=jenkins_secret_for_api_agent
       - AGENT_NAME=api-agent
     command: ["/home/jenkins/start-agent.sh"]
     volumes:
@@ -36,7 +36,7 @@ services:
     container_name: jenkins-ui-agent
     network_mode: "container:jenkins-master"
     environment:
-      - JENKINS_SECRET=26aaed2c098a501e767960a903ffc72289e2a99093155d22be50368026048c36
+      - JENKINS_SECRET=jenkins_secret_for_ui_agent
       - AGENT_NAME=ui-agent
     command: ["/home/jenkins/start-agent.sh"]
     volumes:
