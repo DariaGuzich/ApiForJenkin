@@ -6,35 +6,15 @@ import db.util.DatabaseUtil;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Repository class for User table operations
- * Provides high-level methods for user-related database operations
- */
 public class UserRepository {
     
     private final DatabaseUtil dbUtil;
     
-    /**
-     * Create UserRepository with environment-specific database configuration
-     * @param environment database environment (local, docker, jenkins, etc.)
-     */
     public UserRepository(String environment) {
         this.dbUtil = new DatabaseUtil(environment);
     }
 
-    /**
-     * Check if user exists by first name and last name
-     */
-    public boolean userExists(String firstName, String lastName) {
-        return dbUtil.recordExists("users", 
-            "firstname = ? AND lastname = ?", firstName, lastName);
-    }
-    
-    /**
-     * Find user by first name and last name
-     * @return Optional containing user data if found, empty otherwise
-     */
-    public Optional<User> findByName(String firstName, String lastName) {
+    private Optional<User> findByName(String firstName, String lastName) {
         Map<String, Object> userData = dbUtil.executeQueryForSingleRow(
             "SELECT * FROM users WHERE firstname = ? AND lastname = ?", 
             firstName, lastName);
@@ -46,23 +26,6 @@ public class UserRepository {
         return Optional.of(mapToUser(userData));
     }
     
-    /**
-     * Find user by ID
-     */
-    public Optional<User> findById(Long id) {
-        Map<String, Object> userData = dbUtil.executeQueryForSingleRow(
-            "SELECT * FROM users WHERE id = ?", id);
-        
-        if (userData == null) {
-            return Optional.empty();
-        }
-        
-        return Optional.of(mapToUser(userData));
-    }
-    
-    /**
-     * Validate that user exists with expected properties
-     */
     public void validateUser(String firstName, String lastName, int expectedAge, String expectedEmail) {
         Optional<User> userOpt = findByName(firstName, lastName);
         
@@ -89,9 +52,6 @@ public class UserRepository {
         }
     }
     
-    /**
-     * Map database row to User object
-     */
     private User mapToUser(Map<String, Object> userData) {
         User user = new User();
         user.setId(((Number) userData.get("id")).longValue());
@@ -102,17 +62,10 @@ public class UserRepository {
         return user;
     }
     
-    /**
-     * Close all database connections
-     * Should be called in test cleanup methods
-     */
     public static void closeAllConnections() {
         DatabaseConnectionManager.getInstance().closeAll();
     }
     
-    /**
-     * Inner class representing User entity
-     */
     public static class User {
         private Long id;
         private String firstName;
@@ -120,7 +73,6 @@ public class UserRepository {
         private Integer age;
         private String email;
         
-        // Getters and setters
         public Long getId() { return id; }
         public void setId(Long id) { this.id = id; }
         

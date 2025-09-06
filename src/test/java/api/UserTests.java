@@ -42,7 +42,6 @@ public class UserTests {
 
     @Test
     public void testCreateUser() {
-        // API Test - Create user via API
         UserCreationModel userCreationModel = new UserCreationModel();
         userCreationModel.setFirstName("Muhammad");
         userCreationModel.setLastName("Ovi");
@@ -52,10 +51,8 @@ public class UserTests {
         assertEquals(201, response.getStatusCode());
         System.out.println("API Test: User creation API call successful");
         
-        // Database Verification - Verify Muhammad Ovi exists in database
         System.out.println("Database Test: Verifying Muhammad Ovi exists in database...");
         
-        // Validate user exists with expected properties
         userRepository.validateUser("Muhammad", "Ovi", 25, "muhammad.ovi@example.com");
         
         System.out.println("Database Test: User verification completed successfully");

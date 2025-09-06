@@ -42,7 +42,6 @@ public class DriverFactory {
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions options = new ChromeOptions();
 
-                // Основные аргументы для Docker/headless режима
                 options.addArguments("--headless");
                 options.addArguments("--no-sandbox");
                 options.addArguments("--disable-dev-shm-usage");
@@ -51,7 +50,6 @@ public class DriverFactory {
                 options.addArguments("--disable-web-security");
                 options.addArguments("--disable-features=VizDisplayCompositor");
 
-                // Уникальная директория пользователя для каждого экземпляра
                 options.addArguments("--user-data-dir=/tmp/chrome-user-data-" + UUID.randomUUID().toString());
 
                 driver = new ChromeDriver(options);

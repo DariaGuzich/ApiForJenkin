@@ -43,7 +43,6 @@ public class DatabaseConnectionManager {
         config.setPassword(dbProperties.getProperty(prefix + "password"));
         config.setDriverClassName(dbProperties.getProperty(prefix + "driver"));
         
-        // Connection pool settings for test framework
         config.setMaximumPoolSize(5);
         config.setMinimumIdle(1);
         config.setConnectionTimeout(30000);
@@ -73,7 +72,6 @@ public class DatabaseConnectionManager {
 
     private Properties getDefaultProperties() {
         Properties props = new Properties();
-        // Default MySQL for local testing
         props.setProperty("db.local.url", "jdbc:mysql://localhost:3306/testdb");
         props.setProperty("db.local.username", "testuser");
         props.setProperty("db.local.password", "testpass");

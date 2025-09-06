@@ -23,12 +23,12 @@ public class TestResultExtension implements TestWatcher {
             WebDriver driver = DriverFactory.getDriver(DriverTypes.Chrome);
             takeScreenshot(driver, context.getDisplayName());
         }
-        DriverFactory.quitDriver(); // Закрываем драйвер после скриншота
+        DriverFactory.quitDriver();
     }
 
     @Override
     public void testSuccessful(ExtensionContext context) {
-        DriverFactory.quitDriver(); // Закрываем драйвер после успешного теста
+        DriverFactory.quitDriver();
     }
 
     private void takeScreenshot(WebDriver driver, String testName) {
