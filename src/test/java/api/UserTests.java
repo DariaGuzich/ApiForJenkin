@@ -3,8 +3,7 @@ package api;
 import api.UsersModels.UserAnswerModel;
 import api.UsersModels.UserCreationModel;
 import api.UsersModels.DeleteUserModel;
-import db.util.DatabaseConnectionManager;
-import db.util.DatabaseUtil;
+import db.UserRepository;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,23 +16,19 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserTests {
 
     private static DummyJsonClient dummyJsonClient;
-    private static DatabaseUtil dbUtil;
+    private static UserRepository userRepository;
 
     @BeforeAll
     public static void setupClient() {
         dummyJsonClient = new DummyJsonClient();
-        
-        // Initialize database utility - default to jenkins if JENKINS_URL is set, otherwise docker
-        String environment = System.getProperty("test.db.environment", 
-            System.getenv("JENKINS_URL") != null ? "jenkins" : "docker");
-        dbUtil = new DatabaseUtil(environment);
+        String environment = System.getProperty("test.db.environment", System.getenv("JENKINS_URL") != null ? "jenkins" : "docker");
+        userRepository = new UserRepository(environment);
         System.out.println("Database tests initialized for environment: " + environment);
     }
     
     @AfterAll
     public static void cleanup() {
-        // Close database connections
-        DatabaseConnectionManager.getInstance().closeAll();
+        UserRepository.closeAllConnections();
     }
 
     @Test
@@ -57,27 +52,13 @@ public class UserTests {
         assertEquals(201, response.getStatusCode());
         System.out.println("API Test: User creation API call successful");
         
-        // Database Verification - Check if user Muhammad Ovi exists in database
+        // Database Verification - Verify Muhammad Ovi exists in database
         System.out.println("Database Test: Verifying Muhammad Ovi exists in database...");
         
-        // Check if user exists by firstname and lastname
-        boolean userExists = dbUtil.recordExists("users", 
-            "firstname = ? AND lastname = ?", "Muhammad", "Ovi");
-        assertTrue(userExists, "User Muhammad Ovi should exist in database");
-        
-        // Get the user details for detailed verification
-        Map<String, Object> user = dbUtil.executeQueryForSingleRow(
-            "SELECT * FROM users WHERE firstname = ? AND lastname = ?", 
-            "Muhammad", "Ovi");
-        
-        assertNotNull(user, "User should be found in database");
-        assertEquals("Muhammad", user.get("firstname"));
-        assertEquals("Ovi", user.get("lastname"));
-        assertEquals(25, user.get("age"));
-        assertEquals("muhammad.ovi@example.com", user.get("email"));
+        // Validate user exists with expected properties
+        userRepository.validateUser("Muhammad", "Ovi", 25, "muhammad.ovi@example.com");
         
         System.out.println("Database Test: User verification completed successfully");
-        System.out.println("Found user: " + user);
     }
 
     @Test
