@@ -136,7 +136,14 @@ public class InfluxDBMetrics {
     
     public void close() {
         if (client != null) {
-            client.close();
+            try {
+                // Close client and wait for threads to finish
+                client.close();
+                // Give threads time to shutdown gracefully
+                Thread.sleep(500);
+            } catch (Exception e) {
+                System.err.println("Error closing InfluxDB client: " + e.getMessage());
+            }
         }
     }
     
