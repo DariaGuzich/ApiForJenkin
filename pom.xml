@@ -149,6 +149,23 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>3.7.0</version>
+                        <executions>
+                            <execution>
+                                <id>build-classpath</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>build-classpath</goal>
+                                </goals>
+                                <configuration>
+                                    <outputFile>${project.build.directory}/classpath.txt</outputFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>3.1.0</version>
@@ -157,13 +174,39 @@
                                 <id>send-metrics</id>
                                 <phase>test</phase>
                                 <goals>
-                                    <goal>exec</goal>
+                                    <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>./send-metrics.sh</executable>
+                                    <mainClass>metrics.InfluxDBMetrics</mainClass>
                                     <arguments>
                                         <argument>target/surefire-reports</argument>
                                     </arguments>
+                                    <systemProperties>
+                                        <systemProperty>
+                                            <key>influxdb.url</key>
+                                            <value>http://influxdb:8086</value>
+                                        </systemProperty>
+                                        <systemProperty>
+                                            <key>influxdb.token</key>
+                                            <value>my-super-secret-auth-token</value>
+                                        </systemProperty>
+                                        <systemProperty>
+                                            <key>influxdb.org</key>
+                                            <value>test-org</value>
+                                        </systemProperty>
+                                        <systemProperty>
+                                            <key>influxdb.bucket</key>
+                                            <value>test-results</value>
+                                        </systemProperty>
+                                        <systemProperty>
+                                            <key>BUILD_NUMBER</key>
+                                            <value>unknown</value>
+                                        </systemProperty>
+                                        <systemProperty>
+                                            <key>JOB_NAME</key>
+                                            <value>local</value>
+                                        </systemProperty>
+                                    </systemProperties>
                                 </configuration>
                             </execution>
                         </executions>
