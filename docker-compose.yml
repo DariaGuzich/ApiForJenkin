@@ -98,13 +98,14 @@ services:
     restart: unless-stopped
 
   appium-server:
-    image: appium/appium:v2.11.5-p0
+    build:
+      context: ../ApiForJenkin
+      dockerfile: appium.dockerfile
     container_name: appium-server
     ports:
       - "4723:4723"
     environment:
       - RELAXED_SECURITY=true
-    command: ["appium", "--address", "0.0.0.0", "--port", "4723", "--allow-insecure=adb_shell"]
     restart: unless-stopped
 
   android-emulator:
