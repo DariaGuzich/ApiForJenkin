@@ -24,17 +24,30 @@ public class AndroidAppTest {
     public void setUp() throws MalformedURLException {
         UiAutomator2Options options = new UiAutomator2Options();
         options.setPlatformName("Android");
-        options.setDeviceName("emulator-5554");
+
+        // Используем переменную окружения для устройства или эмулятора
+        String deviceName = System.getProperty("device.name", "android-emulator");
+        options.setDeviceName(deviceName);
+
+        // Настройки для подключения к удаленному устройству
+        String deviceHost = System.getProperty("device.host", "android-emulator");
+        String devicePort = System.getProperty("device.port", "5555");
+        options.setCapability("appium:udid", deviceHost + ":" + devicePort);
+
         options.setPlatformVersion("13");
         options.setAutomationName("UiAutomator2");
-        
+
         // Открываем домашний экран и ищем доступные приложения
         options.setAppPackage("com.google.android.apps.nexuslauncher");
         options.setAppActivity("com.google.android.apps.nexuslauncher.NexusLauncherActivity");
-        
+
         // Дополнительные настройки
         options.setCapability("appium:newCommandTimeout", 300);
         options.setCapability("appium:noReset", true);
+
+        // Настройки для работы с удаленным устройством
+        options.setCapability("appium:connectHardwareKeyboard", true);
+        options.setCapability("appium:systemPort", 8200);
         
         String appiumHost = System.getProperty("appium.host", "localhost");
         String appiumPort = System.getProperty("appium.port", "4723");
