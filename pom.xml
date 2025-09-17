@@ -118,7 +118,7 @@
             <artifactId>java-client</artifactId>
             <version>9.3.0</version>
         </dependency>
-        
+
     </dependencies>
 
     <build>

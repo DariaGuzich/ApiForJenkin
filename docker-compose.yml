@@ -97,59 +97,11 @@ services:
       - influxdb
     restart: unless-stopped
 
-  appium-server:
-    build:
-      context: ../ApiForJenkin
-      dockerfile: appium.dockerfile
-    container_name: appium-server
-    ports:
-      - "4723:4723"
-    environment:
-      - RELAXED_SECURITY=true
-    restart: unless-stopped
-
-  android-emulator:
-    image: budtmo/docker-android:emulator_13.0
-    container_name: android-emulator
-    privileged: true
-    ports:
-      - "6080:6080"  # noVNC web interface
-      - "5555:5555"  # ADB port
-    environment:
-      - EMULATOR_DEVICE=Samsung Galaxy S10
-      - WEB_VNC=true
-      - APPIUM=true
-    volumes:
-      - /dev/kvm:/dev/kvm
-    restart: unless-stopped
-
-  mobile-agent:
-    build:
-      context: ../ApiForJenkin
-      dockerfile: mobile-agent.dockerfile
-    container_name: jenkins-mobile-agent
-    network_mode: "container:jenkins-master"
-    environment:
-      - JENKINS_SECRET=your-mobile-agent-secret
-      - AGENT_NAME=mobile-agent
-      - APPIUM_HOST=appium-server
-      - ANDROID_DEVICE_HOST=android-emulator
-    command: ["/home/jenkins/start-agent.sh"]
-    volumes:
-      - mobile_workspace:/home/jenkins/agent
-      - ./start-agent.sh:/home/jenkins/start-agent.sh:ro
-    depends_on:
-      - jenkins-master
-      - appium-server
-      - android-emulator
-    restart: unless-stopped
-
 volumes:
   jenkins_home:
     external: true
   api_workspace:
   ui_workspace:
-  mobile_workspace:
   mysql_data:
   influxdb_data:
   grafana_data:
