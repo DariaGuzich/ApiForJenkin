@@ -139,12 +139,76 @@
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
                     </includes>
+                    <!-- Parallel execution configuration -->
+                    <parallel>all</parallel>
+                    <threadCount>6</threadCount>
+                    <perCoreThreadCount>false</perCoreThreadCount>
+                    <useUnlimitedThreads>false</useUnlimitedThreads>
+                    <forkCount>1</forkCount>
+                    <reuseForks>true</reuseForks>
+                    <!-- Enable parallel execution for dynamic tests -->
+                    <properties>
+                        <configurationParameters>
+                            junit.jupiter.execution.parallel.enabled=true
+                            junit.jupiter.execution.parallel.mode.default=concurrent
+                            junit.jupiter.execution.parallel.config.strategy=dynamic
+                        </configurationParameters>
+                    </properties>
+                    <!-- System properties for Grid configuration -->
+                    <systemPropertyVariables>
+                        <browser.type>${browser.type}</browser.type>
+                        <selenium.grid.enabled>true</selenium.grid.enabled>
+                        <selenium.grid.hub.url>http://localhost:4444</selenium.grid.hub.url>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
     <profiles>
+        <!-- Browser-specific profiles -->
+        <profile>
+            <id>chrome</id>
+            <properties>
+                <browser.type>CHROME</browser.type>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>firefox</id>
+            <properties>
+                <browser.type>FIREFOX</browser.type>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>edge</id>
+            <properties>
+                <browser.type>EDGE</browser.type>
+            </properties>
+        </profile>
+
+        <!-- Cross-browser profile - runs tests in all browsers -->
+        <profile>
+            <id>cross-browser</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/CrossBrowser*Tests.java</include>
+                            </includes>
+                            <parallel>methods</parallel>
+                            <threadCount>6</threadCount>
+                            <perCoreThreadCount>false</perCoreThreadCount>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
         <profile>
             <id>with-metrics</id>
             <build>

@@ -17,8 +17,9 @@ public class BaseTests {
     @BeforeEach
     public void initialize() {
         logger.info("Инициализация теста...");
-        logger.info("Создание экземпляра WebDriver (Chrome)");
-        webDriver = DriverFactory.getDriver(DriverTypes.Chrome);
-        logger.info("WebDriver успешно инициализирован");
+        String browserType = System.getProperty("browser.type", "CHROME");
+        logger.info("Создание экземпляра WebDriver ({})", browserType);
+        webDriver = DriverFactory.getDriver();
+        logger.info("WebDriver успешно инициализирован для браузера {}", browserType);
     }
 }

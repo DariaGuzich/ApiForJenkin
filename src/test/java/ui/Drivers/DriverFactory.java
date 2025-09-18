@@ -49,8 +49,30 @@ public class DriverFactory {
         return driver;
     }
 
+    public static WebDriver getDriver() {
+        String browserType = System.getProperty("browser.type", "Chrome");
+
+        // Проверяем, что browserType не null и не пустая строка
+        if (browserType == null || browserType.trim().isEmpty()) {
+            browserType = "Chrome";
+        }
+
+        DriverTypes driverType;
+        try {
+            // Преобразуем к правильному формату: первая буква заглавная, остальные строчные
+            String normalizedBrowserType = browserType.substring(0, 1).toUpperCase() +
+                                         browserType.substring(1).toLowerCase();
+            driverType = DriverTypes.valueOf(normalizedBrowserType);
+        } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
+            System.out.println("Unknown browser type: " + browserType + ". Using Chrome as default.");
+            driverType = DriverTypes.Chrome;
+        }
+        return getDriver(driverType);
+    }
+
     private static WebDriver createDriver(DriverTypes driverType) {
-        boolean gridEnabled = Boolean.parseBoolean(gridProperties.getProperty("selenium.grid.enabled", "false"));
+        boolean gridEnabled = Boolean.parseBoolean(System.getProperty("selenium.grid.enabled",
+                                                                     gridProperties.getProperty("selenium.grid.enabled", "false")));
 
         if (gridEnabled) {
             return createRemoteDriver(driverType);
@@ -60,7 +82,8 @@ public class DriverFactory {
     }
 
     private static WebDriver createRemoteDriver(DriverTypes driverType) {
-        String hubUrl = gridProperties.getProperty("selenium.grid.hub.url", "http://selenium-hub:4444");
+        String hubUrl = System.getProperty("selenium.grid.hub.url",
+                                          gridProperties.getProperty("selenium.grid.hub.url", "http://localhost:4444"));
         boolean localFallback = Boolean.parseBoolean(gridProperties.getProperty("selenium.grid.local.fallback", "true"));
 
         try {
