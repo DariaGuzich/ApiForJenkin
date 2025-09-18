@@ -158,7 +158,7 @@
                     <systemPropertyVariables>
                         <browser.type>${browser.type}</browser.type>
                         <selenium.grid.enabled>true</selenium.grid.enabled>
-                        <selenium.grid.hub.url>http://localhost:4444</selenium.grid.hub.url>
+                        <selenium.grid.hub.url>http://selenium-hub:4444</selenium.grid.hub.url>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
